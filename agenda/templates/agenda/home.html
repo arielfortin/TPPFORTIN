@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Bienvenido a la Agenda Online</h1>
+<p>Selecciona un profesional o agenda tu cita.</p>
+
+<ul>
+    <li><a href="{% url 'agenda:professional_list' %}">Ver Profesionales</a></li>
+    <li><a href="{% url 'agenda:professional_create' %}">Registrar Profesional</a></li>
+    <li><a href="{% url 'agenda:client_create' %}">Registrar Cliente</a></li>
+    <li><a href="{% url 'agenda:appointment_create' %}">Agendar Cita</a></li>
+</ul>
+{% endblock %}

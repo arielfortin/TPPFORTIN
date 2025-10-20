@@ -1,0 +1,30 @@
+{% extends 'agenda/base.html' %}
+{% block title %}Profesionales{% endblock %}
+{% block content %}
+<h1>Profesionales</h1>
+<form method="get" class="row g-2 mb-3">
+{{ form.q.label_tag }}
+<div class="col-auto">
+{{ form.q }}
+</div>
+<div class="col-auto">
+{{ form.profession }}
+</div>
+<div class="col-auto">
+<button class="btn btn-primary" type="submit">Buscar</button>
+</div>
+</form>
+
+
+<ul class="list-group">
+{% for p in professionals %}
+<li class="list-group-item">
+<strong>{{ p.first_name }} {{ p.last_name }}</strong> — {{ p.get_profession_display }}
+<br>
+{{ p.email }} {{ p.phone }}
+</li>
+{% empty %}
+<li class="list-group-item">No hay profesionales.</li>
+{% endfor %}
+</ul>
+{% endblock %}
