@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Agenda Online{% endblock %}</title>
+    <title>{% block title %}Agenda Profesional{% endblock %}</title>
 
     <!-- Fuente elegante -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Íconos (Font Awesome) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
         body {
@@ -20,8 +23,15 @@
             background-color: #66b3ff;
             color: white;
             padding: 1rem 2rem;
-            text-align: left; /* 👈 alineado a la izquierda */
+            text-align: left;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        header i {
+            font-size: 1.8rem;
         }
 
         header h1 {
@@ -34,9 +44,9 @@
         nav {
             background-color: #e9f5ff;
             display: flex;
-            justify-content: flex-start; /* 👈 menú alineado a la izquierda */
+            justify-content: flex-start;
             gap: 1.5rem;
-            padding: 0.8rem 2rem; /* espacio a la izquierda */
+            padding: 0.8rem 2rem;
         }
 
         nav a {
@@ -52,7 +62,7 @@
 
         main {
             max-width: 900px;
-            margin: 2rem 2rem; /* 👈 deja margen solo a la izquierda */
+            margin: 2rem 2rem;
             padding: 2rem;
             background-color: white;
             border-radius: 12px;
@@ -60,7 +70,7 @@
         }
 
         footer {
-            text-align: left; /* 👈 alineado a la izquierda */
+            text-align: left;
             padding: 1rem 2rem;
             background-color: #e9f5ff;
             font-size: 0.9rem;
@@ -71,15 +81,16 @@
 </head>
 <body>
     <header>
-        <h1>AGENDA ONLINE</h1>
+        <i class="fa-solid fa-calendar-days"></i>
+        <h1>Agenda Online</h1>
     </header>
 
     <nav>
-        <a href="{% url 'agenda:home' %}">Inicio</a>
-        <a href="{% url 'agenda:professional_list' %}">Profesionales</a>
-        <a href="{% url 'agenda:professional_create' %}">Nuevo Profesional</a>
-        <a href="{% url 'agenda:client_create' %}">Nuevo Cliente</a>
-        <a href="{% url 'agenda:appointment_create' %}">Agendar Cita</a>
+        <a href="{% url 'agenda:home' %}"><i class="fa-solid fa-house"></i> Inicio</a>
+        <a href="{% url 'agenda:professional_list' %}"><i class="fa-solid fa-users"></i> Profesionales</a>
+        <a href="{% url 'agenda:professional_create' %}"><i class="fa-solid fa-user-plus"></i> Nuevo Profesional</a>
+        <a href="{% url 'agenda:client_create' %}"><i class="fa-solid fa-user"></i> Nuevo Cliente</a>
+        <a href="{% url 'agenda:appointment_create' %}"><i class="fa-solid fa-calendar-plus"></i> Agendar Cita</a>
     </nav>
 
     <main>
@@ -88,4 +99,7 @@
     </main>
 
     <footer>
-        © 2025 Agenda Profesional | Desarrollado por Arielinio
+        © 2025 Agenda Online | Desarrollado por Arielinio 💙
+    </footer>
+</body>
+</html>

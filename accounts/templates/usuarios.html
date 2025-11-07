@@ -1,0 +1,43 @@
+<h2>Gestión de Usuarios</h2>
+
+<form method="POST">
+  {% csrf_token %}
+  <input type="hidden" name="user_id" id="user_id">
+
+  <label>Usuario:</label>
+  <input type="text" name="username" id="username" required>
+
+  <label>Contraseña (solo si deseas cambiarla):</label>
+  <input type="password" name="password" id="password">
+
+  <button type="submit" name="crear">Crear</button>
+  <button type="submit" name="editar">Editar</button>
+</form>
+
+<hr>
+
+<table border="1">
+  <tr>
+    <th>ID</th>
+    <th>Usuario</th>
+    <th>Acciones</th>
+  </tr>
+
+  {% for user in usuarios %}
+  <tr>
+    <td>{{ user.id }}</td>
+    <td>{{ user.username }}</td>
+    <td>
+      <button onclick="cargar('{{ user.id }}', '{{ user.username }}')">Editar</button>
+      <a href="?eliminar={{ user.id }}" onclick="return confirm('Eliminar usuario?');">Eliminar</a>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<script>
+function cargar(id, username) {
+  document.getElementById('user_id').value = id;
+  document.getElementById('username').value = username;
+}
+</script>
