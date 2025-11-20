@@ -1,0 +1,153 @@
+{% extends "agenda/base.html" %}
+{% load static %}
+
+{% block title %}Registro de Usuario{% endblock %}
+
+{% block content %}
+
+<style>
+    .reg-container {
+        max-width: 700px;
+        margin: 30px auto;
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.10);
+        font-family: "Poppins", sans-serif;
+    }
+
+    .reg-container h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    h3 {
+        margin-top: 10px;
+        font-size: 18px;
+        color: #555;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 5px;
+        margin-bottom: 10px;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px 25px;
+    }
+
+    .form-grid p {
+        margin: 0;
+    }
+
+    label {
+        font-weight: 500;
+        color: #333;
+        font-size: 14px;
+        margin-bottom: 3px;
+        display: block;
+    }
+
+    input, textarea {
+        width: 100%;
+        padding: 8px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+    }
+
+    textarea {
+        resize: none;
+        height: 70px;
+    }
+
+    .helper-text {
+        font-size: 11px;
+        color: #777;
+        margin-top: 3px;
+        display: block;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        background: #4da6ff;
+        border: none;
+        color: white;
+        font-size: 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        margin-top: 15px;
+    }
+
+    button:hover {
+        background: #338fe0;
+    }
+
+    .error-msg {
+        padding: 10px;
+        background: #ffd2d2;
+        border-left: 4px solid #d40000;
+        color: #660000;
+        margin-bottom: 15px;
+        border-radius: 6px;
+    }
+
+    @media (max-width: 650px) {
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="reg-container">
+    <h2>Crear Cuenta</h2>
+
+    {% if error %}
+    <div class="error-msg">
+        {{ error }}
+    </div>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <!-- DATOS DE USUARIO -->
+        <h3>Datos de Usuario</h3>
+
+        <div class="form-grid">
+
+            {% for field in form_user %}
+            <p>
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+
+                {% if field.name == "username" %}
+                <span class="helper-text">
+                    Máximo 20 caracteres. Solo letras, números y @/./+/-/_.
+                </span>
+                {% endif %}
+
+                {% if field.errors %}
+                <span style="color:#b30000; font-size:12px;">
+                    {{ field.errors|striptags }}
+                </span>
+                {% endif %}
+            </p>
+            {% endfor %}
+        </div>
+
+        <!-- INFORMACIÓN PERSONAL -->
+        <h3>Información Personal</h3>
+        <div class="form-grid">
+            {{ form_profile.as_p }}
+        </div>
+
+        <button type="submit">Registrarme</button>
+    </form>
+</div>
+
+{% endblock %}

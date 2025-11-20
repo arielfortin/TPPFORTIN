@@ -1,16 +1,136 @@
-<h2>Login</h2>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
 
-<form method="POST">
-  {% csrf_token %}
-  <label>Usuario:</label>
-  <input type="text" name="username" required>
+    <!-- Fuente -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
-  <label>Contraseña:</label>
-  <input type="password" name="password" required>
+    <!-- Íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <button type="submit">Ingresar</button>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            margin: 0;
+            background-color: #f5f7fa;
+        }
 
-  {% if error %}
-    <p style="color:red;">{{ error }}</p>
-  {% endif %}
-</form>
+        header {
+            background-color: #66b3ff;
+            color: white;
+            padding: 1.2rem 2rem;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: .8rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+
+        header i {
+            font-size: 1.8rem;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        /* Caja del login */
+        .login-container {
+            max-width: 420px;
+            margin: 4rem auto;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        label {
+            font-weight: 500;
+            color: #444;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.8rem;
+            margin: .5rem 0 1rem 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+
+        button {
+            width: 100%;
+            padding: .9rem;
+            background-color: #66b3ff;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        button:hover {
+            background-color: #4da6ff;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .register-link a {
+            color: #0066cc;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .register-link a:hover {
+            color: #003366;
+        }
+
+        footer {
+            text-align: left;
+            padding: 1rem 2rem;
+            background-color: #e9f5ff;
+            font-size: .9rem;
+            color: #555;
+            margin-top: 4rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <i class="fa-solid fa-calendar-days"></i>
+        <h1>Agenda Online</h1>
+    </header>
+
+    <div class="login-container">
+        <h2><i class="fa-solid fa-user-lock"></i> Iniciar Sesión</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <label>Usuario</label>
+            <input type="text" name="username" required>
+
+            <label>Contraseña</label>
+            <input type="password" name="password" required>
+
+            <button type="submit">Entrar</button>
+        </form>
+
+        <div class="register-link">

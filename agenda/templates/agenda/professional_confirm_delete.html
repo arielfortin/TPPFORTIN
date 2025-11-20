@@ -1,0 +1,15 @@
+{% extends 'agenda/base.html' %}
+
+{% block content %}
+<h2>Eliminar Profesional</h2>
+
+<p>¿Seguro que deseas eliminar a <strong>{{ professional.first_name }} {{ professional.last_name }}</strong>?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Sí, eliminar</button>
+</form>
+
+<a href="{% url 'agenda:professional_list' %}">Cancelar</a>
+
+{% endblock %}

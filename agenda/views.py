@@ -1,10 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import Professional
 from .forms import ProfessionalForm, ClientForm, AppointmentForm, ProfessionalSearchForm
 from django.db.models import Q
 from django.http import HttpResponse
 from django.forms import *
-
+from django.contrib import messages
 
 def index(request):
     return render(request, 'agenda/home.html')
@@ -59,3 +59,26 @@ def appointment_create(request):
     else:
         form = AppointmentForm()
     return render(request, 'agenda/appointment_form.html', {'form': form})
+
+def professional_edit(request, pk):
+    professional = get_object_or_404(Professional, pk=pk)
+
+    if request.method == 'POST':
+        form = ProfessionalForm(request.POST, instance=professional)
+        if form.is_valid():
+            form.save()
+            return redirect('agenda:professional_list')
+    else:
+        form = ProfessionalForm(instance=professional)
+
+    return render(request, 'agenda/professional_edit.html', {'form': form})
+
+
+def professional_delete(request, pk):
+    professional = get_object_or_404(Professional, pk=pk)
+
+    if request.method == 'POST':
+        professional.delete()
+        return redirect('agenda:professional_list')
+
+    return render(request, 'agenda/professional_confirm_delete.html', {'professional': professional})

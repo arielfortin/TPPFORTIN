@@ -1,0 +1,124 @@
+{% extends "agenda/base.html" %}
+
+{% block title %}Mi Perfil{% endblock %}
+
+{% block content %}
+<style>
+    .perfil-contenedor {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+        margin-top: 15px;
+    }
+
+    /* Columna de Perfil */
+    .columna-perfil {
+        width: 28%;
+        background: #f1f1f1;
+        padding: 15px;
+        border-radius: 8px;
+        text-align: left;
+    }
+
+    .columna-perfil img {
+        width: 100%;
+        max-width: 160px;
+        border-radius: 8px;
+        border: 1px solid #bbb;
+        margin-bottom: 10px;
+    }
+
+    /* Columna formularios */
+    .columna-formularios {
+        width: 72%;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .bloque-formulario {
+        background: #ffffff;
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+    }
+
+    .bloque-formulario h3 {
+        margin-top: 0;
+        font-size: 17px;
+        color: #333;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 4px;
+        margin-bottom: 10px;
+    }
+
+    button {
+        margin-top: 15px;
+        padding: 8px 18px;
+        font-size: 15px;
+        border-radius: 5px;
+        background: #005bbb;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #004999;
+    }
+
+    .campo {
+        margin-bottom: 8px;
+    }
+
+    label {
+        font-size: 14px;
+        color: #333;
+        font-weight: 500;
+    }
+</style>
+
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="perfil-contenedor">
+
+        <!-- COLUMNA 1: FOTO + USER FORM -->
+        <div class="columna-perfil">
+            <h3>Perfil de Usuario</h3>
+
+            {% if request.user.profile.foto %}
+                <img src="{{ request.user.profile.foto.url }}" alt="Foto de perfil">
+            {% else %}
+                <img src="https://via.placeholder.com/150x150.png?text=Sin+Foto" alt="Sin foto">
+            {% endif %}
+
+            {{ user_form.as_p }}
+        </div>
+
+        <!-- COLUMNA 2 -->
+        <div class="columna-formularios">
+
+            <div class="bloque-formulario">
+                <h3>Datos Personales</h3>
+                <div class="campo">{{ profile_form.nombre.label_tag }} {{ profile_form.nombre }}</div>
+                <div class="campo">{{ profile_form.apellidos.label_tag }} {{ profile_form.apellidos }}</div>
+                <div class="campo">{{ profile_form.profesion.label_tag }} {{ profile_form.profesion }}</div>
+            </div>
+
+            <div class="bloque-formulario">
+                <h3>Información Adicional</h3>
+                <div class="campo">{{ profile_form.comentario.label_tag }} {{ profile_form.comentario }}</div>
+
+                <!-- Aquí estaba tu error: faltaba mostrar el input de FOTO -->
+                <div class="campo">{{ profile_form.foto.label_tag }} {{ profile_form.foto }}</div>
+            </div>
+
+        </div>
+    </div>
+
+    <button type="submit">Guardar Cambios</button>
+</form>
+
+{% endblock %}

@@ -6,91 +6,158 @@
     <title>{% block title %}Agenda Profesional{% endblock %}</title>
 
     <!-- Fuente elegante -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-    <!-- Íconos (Font Awesome) -->
+    <!-- Íconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
-            background-color: #f5f7fa;
+            background-color: #f6f8fa;
             color: #333;
         }
 
+        /* HEADER */
         header {
-            background-color: #66b3ff;
+            background-color: #4e9f3d;   /* verde elegante */
             color: white;
-            padding: 1rem 2rem;
-            text-align: left;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 0.8rem 1.5rem;
             display: flex;
             align-items: center;
-            gap: 0.8rem;
+            gap: 0.7rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         header i {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
         }
 
         header h1 {
             margin: 0;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 600;
-            letter-spacing: 1px;
         }
 
+        /* NAV */
         nav {
-            background-color: #e9f5ff;
+            background-color: #eef5fa;
             display: flex;
-            justify-content: flex-start;
-            gap: 1.5rem;
-            padding: 0.8rem 2rem;
+            gap: 1.2rem;
+            padding: 0.6rem 1.5rem;
+            font-size: 0.85rem;
         }
 
+        /* Estilos por categoría */
         nav a {
-            color: #0066cc;
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.3s ease;
+            padding: 6px 10px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Inicio */
+        nav a.inicio {
+            color: white;
+            background-color: #4e9f3d;
+        }
+
+        /* Azules elegantes para el resto */
+        nav a.azul1 {
+            color: white;
+            background-color: #005ea8;
+        }
+
+        nav a.azul2 {
+            color: white;
+            background-color: #0074c7;
+        }
+
+        nav a.azul3 {
+            color: white;
+            background-color: #2895e2;
+        }
+
+        /* Cerrar sesión */
+        nav a.logout {
+            color: white;
+            background-color: #b93c3c;
         }
 
         nav a:hover {
-            color: #003366;
+            opacity: 0.85;
         }
 
+        /* MAIN */
         main {
-            max-width: 900px;
-            margin: 2rem 2rem;
-            padding: 2rem;
+            max-width: 1000px;
+            margin-left: 1.5rem;   /* pegado a la izquierda */
+            margin-top: 1.5rem;
+            padding: 1.5rem;
             background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
         }
 
+        /* FOOTER */
         footer {
             text-align: left;
-            padding: 1rem 2rem;
-            background-color: #e9f5ff;
-            font-size: 0.9rem;
+            padding: 1rem 1.5rem;
+            background-color: #eef5fa;
             color: #555;
-            margin-top: 3rem;
+            font-size: 0.85rem;
+            margin-top: 2rem;
         }
     </style>
 </head>
 <body>
+
     <header>
         <i class="fa-solid fa-calendar-days"></i>
         <h1>Agenda Online</h1>
     </header>
 
     <nav>
-        <a href="{% url 'agenda:home' %}"><i class="fa-solid fa-house"></i> Inicio</a>
-        <a href="{% url 'agenda:professional_list' %}"><i class="fa-solid fa-users"></i> Profesionales</a>
-        <a href="{% url 'agenda:professional_create' %}"><i class="fa-solid fa-user-plus"></i> Nuevo Profesional</a>
-        <a href="{% url 'agenda:client_create' %}"><i class="fa-solid fa-user"></i> Nuevo Cliente</a>
-        <a href="{% url 'agenda:appointment_create' %}"><i class="fa-solid fa-calendar-plus"></i> Agendar Cita</a>
+
+        <a class="inicio" href="{% url 'agenda:home' %}">
+            <i class="fa-solid fa-house"></i> Inicio
+        </a>
+
+        <a class="azul1" href="{% url 'agenda:professional_list' %}">
+            <i class="fa-solid fa-users-gear"></i> Profesionales
+        </a>
+
+        <a class="azul2" href="{% url 'agenda:professional_create' %}">
+            <i class="fa-solid fa-user-plus"></i> Nuevo Profesional
+        </a>
+
+        <a class="azul2" href="{% url 'agenda:client_create' %}">
+            <i class="fa-solid fa-user-pen"></i> Nuevo Cliente
+        </a>
+
+        <a class="azul3" href="{% url 'agenda:appointment_create' %}">
+            <i class="fa-solid fa-calendar-check"></i> Agendar Cita
+        </a>
+
+        <a class="azul3" href="{% url 'perfil' %}">
+            <i class="fa-solid fa-id-badge"></i> Perfil
+        </a>
+
+        <a class="azul3" href="{% url 'registro' %}">
+            <i class="fa-solid fa-user-shield"></i> Registro
+        </a>
+
+        <a class="azul3" href="{% url 'about' %}">
+            <i class="fa-solid fa-circle-info"></i> Acerca de mí
+        </a>
+
+        <a class="logout" href="{% url 'logout' %}">
+            <i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión
+        </a>
     </nav>
 
     <main>
@@ -101,5 +168,6 @@
     <footer>
         © 2025 Agenda Online | Desarrollado por Arielinio 💙
     </footer>
+
 </body>
 </html>
