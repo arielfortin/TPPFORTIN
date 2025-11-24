@@ -1,124 +1,242 @@
 {% extends "agenda/base.html" %}
+{% load static %}
 
 {% block title %}Mi Perfil{% endblock %}
 
 {% block content %}
+
 <style>
-    .perfil-contenedor {
-        display: flex;
-        gap: 20px;
-        align-items: flex-start;
-        margin-top: 15px;
-    }
+/* Contenedor general */
+.perfil-page {
+  max-width: 1000px;
+  margin: 20px 2rem;
+  font-family: "Poppins", sans-serif;
+  color: #222;
+}
 
-    /* Columna de Perfil */
-    .columna-perfil {
-        width: 28%;
-        background: #f1f1f1;
-        padding: 15px;
-        border-radius: 8px;
-        text-align: left;
-    }
+/* Título */
+.perfil-page .page-title {
+  font-size: 26px;
+  margin-bottom: 14px;
+  font-weight: 700;
+  text-align: left;
+}
 
-    .columna-perfil img {
-        width: 100%;
-        max-width: 160px;
-        border-radius: 8px;
-        border: 1px solid #bbb;
-        margin-bottom: 10px;
-    }
+/* Layout de dos columnas */
+.perfil-grid {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
 
-    /* Columna formularios */
-    .columna-formularios {
-        width: 72%;
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-    }
+/* Columna izquierda (foto) */
+.perfil-left {
+  width: 260px;
+  background: #fff;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #e6e9ee;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+  text-align: left;
+}
 
-    .bloque-formulario {
-        background: #ffffff;
-        padding: 15px;
-        border-radius: 8px;
-        border: 1px solid #ddd;
-    }
+/* Imagen */
+.perfil-left .avatar {
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+  border-radius: 8px;
+  display: block;
+  object-fit: cover;
+  border: 1px solid #d6dbe6;
+  margin-bottom: 10px;
+}
 
-    .bloque-formulario h3 {
-        margin-top: 0;
-        font-size: 17px;
-        color: #333;
-        border-bottom: 1px solid #ccc;
-        padding-bottom: 4px;
-        margin-bottom: 10px;
-    }
+/* Campo file pequeño */
+.file-field {
+  display: block;
+  margin-top: 6px;
+  font-size: 14px;
+}
 
-    button {
-        margin-top: 15px;
-        padding: 8px 18px;
-        font-size: 15px;
-        border-radius: 5px;
-        background: #005bbb;
-        color: white;
-        border: none;
-        cursor: pointer;
-    }
+/* Columna derecha (campos) */
+.perfil-right {
+  flex: 1 1 auto;
+  background: #fff;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid #e6e9ee;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+}
 
-    button:hover {
-        background: #004999;
-    }
+/* Grid de campos */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(140px, 1fr));
+  gap: 10px 14px;
+  align-items: start;
+}
 
-    .campo {
-        margin-bottom: 8px;
-    }
+/* Contenedor campo individual */
+.form-group {
+  margin: 0;
+}
 
-    label {
-        font-size: 14px;
-        color: #333;
-        font-weight: 500;
-    }
+/* Labels e inputs */
+.form-group label {
+  display: block;
+  font-size: 13px;
+  color: #444;
+  margin-bottom: 6px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="file"],
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #cfd6e0;
+  box-sizing: border-box;
+}
+
+/* Botón */
+.btn-save {
+  margin-top: 14px;
+  padding: 10px 16px;
+  background: #66b3ff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-save:hover {
+  background: #4da6ff;
+}
+
+/* Mensajes de error */
+.error-text {
+  color: #b30000;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+}
+
+/* Móvil */
+@media (max-width: 780px) {
+  .perfil-grid { flex-direction: column; }
+  .perfil-left { width: 100%; display:flex; justify-content:center; }
+  .perfil-right { width: 100%; }
+  .form-grid { grid-template-columns: 1fr; }
+}
 </style>
 
+<div class="perfil-page">
 
-<form method="POST" enctype="multipart/form-data">
+  <h1 class="page-title">Mi Perfil</h1>
+
+  <form method="POST" enctype="multipart/form-data" id="perfil-form">
     {% csrf_token %}
 
-    <div class="perfil-contenedor">
+    {% if messages %}
+      {% for m in messages %}
+        <div class="error-text">{{ m }}</div>
+      {% endfor %}
+    {% endif %}
 
-        <!-- COLUMNA 1: FOTO + USER FORM -->
-        <div class="columna-perfil">
-            <h3>Perfil de Usuario</h3>
+    <div class="perfil-grid">
 
-            {% if request.user.profile.foto %}
-                <img src="{{ request.user.profile.foto.url }}" alt="Foto de perfil">
-            {% else %}
-                <img src="https://via.placeholder.com/150x150.png?text=Sin+Foto" alt="Sin foto">
+      <!-- IZQUIERDA: foto + upload -->
+      <div class="perfil-left">
+
+        {% comment %} Mostrar foto actual o fallback {% endcomment %}
+        {% if request.user and request.user.is_authenticated and request.user.profile and request.user.profile.foto %}
+          <img id="avatarPreview" class="avatar" src="{{ request.user.profile.foto.url }}" alt="Foto de perfil">
+        {% else %}
+          <img id="avatarPreview" class="avatar" src="/media/avatarAF.jpeg" alt="Sin foto">
+        {% endif %}
+
+        <div>
+          {% if form_profile.foto %}
+            <label class="file-field" for="{{ form_profile.foto.id_for_label }}">Cambiar foto</label>
+            {{ form_profile.foto }}
+
+            {% if form_profile.foto.errors %}
+              <span class="error-text">{{ form_profile.foto.errors|striptags }}</span>
             {% endif %}
 
-            {{ user_form.as_p }}
+          {% endif %}
         </div>
 
-        <!-- COLUMNA 2 -->
-        <div class="columna-formularios">
+      </div>
 
-            <div class="bloque-formulario">
-                <h3>Datos Personales</h3>
-                <div class="campo">{{ profile_form.nombre.label_tag }} {{ profile_form.nombre }}</div>
-                <div class="campo">{{ profile_form.apellidos.label_tag }} {{ profile_form.apellidos }}</div>
-                <div class="campo">{{ profile_form.profesion.label_tag }} {{ profile_form.profesion }}</div>
+      <!-- DERECHA: campos -->
+      <div class="perfil-right">
+
+        <div class="form-grid">
+
+          {% for field in form_user %}
+            <div class="form-group">
+        
+              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}
+    
+                  
+              {% if field.errors %}
+                <span class="error-text">{{ field.errors|striptags }}</span>
+              {% endif %}
             </div>
+          {% endfor %}
 
-            <div class="bloque-formulario">
-                <h3>Información Adicional</h3>
-                <div class="campo">{{ profile_form.comentario.label_tag }} {{ profile_form.comentario }}</div>
+          {% for field in form_profile %}
+            {% if field.name != "foto" %}
+              <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
 
-                <!-- Aquí estaba tu error: faltaba mostrar el input de FOTO -->
-                <div class="campo">{{ profile_form.foto.label_tag }} {{ profile_form.foto }}</div>
-            </div>
+                {% if field.errors %}
+                  <span class="error-text">{{ field.errors|striptags }}</span>
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
 
         </div>
+
+        <button type="submit" class="btn-save">Guardar Cambios</button>
+
+      </div>
     </div>
+  </form>
+</div>
 
-    <button type="submit">Guardar Cambios</button>
-</form>
+<script>
+/* Preview de la imagen seleccionada */
+(function(){
+  const input = document.querySelector('input[type="file"][name$="foto"], input[type="file"]');
+  const preview = document.getElementById('avatarPreview');
+
+  if (!input || !preview) return;
+
+  input.addEventListener('change', function(e){
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      preview.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+
+})();
+</script>
 
 {% endblock %}

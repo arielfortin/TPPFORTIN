@@ -2,20 +2,21 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .forms import UserForm, ProfileForm
 from django.contrib import messages
-from .forms import RegistroForm, ProfileExtraForm
+
+from .forms import UserRegisterForm, ProfileForm, UserEditForm
 
 
 def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
+
         user = authenticate(request, username=username, password=password)
+
         if user:
             login(request, user)
-            #return redirect('dashboard')
-            return redirect('agenda:home')   # 👈 Redirige al menú principal
+            return redirect('agenda:home')  
         else:
             return render(request, 'login.html', {'error': 'Credenciales inválidas'})
     return render(request, 'login.html')
@@ -59,56 +60,71 @@ def usuarios_view(request):
     usuarios = User.objects.all()
     return render(request, 'usuarios.html', {'usuarios': usuarios})
 
+
 @login_required
 def perfil_view(request):
-    user_form = UserForm(instance=request.user)
-    profile_form = ProfileForm(instance=request.user.profile)
+    user = request.user
+    profile = user.profile  # creado automáticamente por la señal
 
-    if request.method == 'POST':
-        user_form = UserForm(request.POST, instance=request.user)
-        profile_form = ProfileForm(request.POST, request.FILES, instance=request.user.profile)
-
-        if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
-            profile_form.save()
-            return redirect('perfil')
-
-    return render(request, 'accounts/perfil.html', {
-        'user_form': user_form,
-        'profile_form': profile_form
-    })
-
-def registro(request):
     if request.method == "POST":
-        form_user = RegistroForm(request.POST)
-        form_profile = ProfileExtraForm(request.POST)
+        form_user = UserEditForm(request.POST, instance=user)
+        form_profile = ProfileForm(request.POST, request.FILES, instance=profile)
 
         if form_user.is_valid() and form_profile.is_valid():
-            user = form_user.save(commit=False)
-            user.set_password(form_user.cleaned_data["password"])
-            user.save()
-
-            profile = form_profile.save(commit=False)
-            profile.user = user
-            profile.save()
-
-            messages.success(request, "Cuenta creada correctamente.")
-            login(request, user)
-            return redirect("home")   # Página principal de agenda
-
+            form_user.save()
+            form_profile.save()
+            return redirect("perfil")
     else:
-        form_user = RegistroForm()
-        form_profile = ProfileExtraForm()
+        form_user = UserEditForm(instance=user)
+        form_profile = ProfileForm(instance=profile)
 
-    return render(
-        request,
-        "accounts/registro.html",
-        {
-            "form_user": form_user,
-            "form_profile": form_profile
-        }
-    )
+    return render(request, "accounts/perfil.html", {
+        "form_user": form_user,
+        "form_profile": form_profile
+    })
 
 def about(request):
     return render(request, 'agenda/about.html')
 
+
+# -----------------------------
+#        REGISTRO
+# -----------------------------
+def registro(request):
+    if request.method == 'POST':
+        form_user = UserRegisterForm(request.POST)
+        form_profile = ProfileForm(request.POST, request.FILES)
+
+        if form_user.is_valid() and form_profile.is_valid():
+            username = form_user.cleaned_data['username']
+
+            if User.objects.filter(username=username).exists():
+                messages.error(request, "El usuario ya existe.")
+                return redirect('registro')
+
+            # Crear usuario → la señal ya crea Profile automáticamente
+            user = form_user.save()
+
+            # Actualizar el Profile creado por la señal
+            profile = user.profile
+            profile.profesion = form_profile.cleaned_data.get('profesion')
+            profile.comentario = form_profile.cleaned_data.get('comentario')
+            profile.foto = form_profile.cleaned_data.get('foto')
+            profile.save()
+
+            messages.success(request, "Usuario creado correctamente.")
+            return redirect('login')
+
+        return render(request, 'accounts/registro.html', {
+            'form_user': form_user,
+            'form_profile': form_profile
+        })
+
+    else:
+        form_user = UserRegisterForm()
+        form_profile = ProfileForm()
+
+        return render(request, 'accounts/registro.html', {
+            'form_user': form_user,
+            'form_profile': form_profile
+        })

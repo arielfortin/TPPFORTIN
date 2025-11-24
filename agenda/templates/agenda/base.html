@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Agenda Profesional{% endblock %}</title>
 
-    <!-- Fuente elegante -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-    <!-- Íconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
@@ -19,9 +16,8 @@
             color: #333;
         }
 
-        /* HEADER */
         header {
-            background-color: #4e9f3d;   /* verde elegante */
+            background-color: #4e9f3d;
             color: white;
             padding: 0.8rem 1.5rem;
             display: flex;
@@ -40,7 +36,6 @@
             font-weight: 600;
         }
 
-        /* NAV */
         nav {
             background-color: #eef5fa;
             display: flex;
@@ -49,7 +44,6 @@
             font-size: 0.85rem;
         }
 
-        /* Estilos por categoría */
         nav a {
             text-decoration: none;
             font-weight: 500;
@@ -60,42 +54,18 @@
             gap: 6px;
         }
 
-        /* Inicio */
-        nav a.inicio {
-            color: white;
-            background-color: #4e9f3d;
-        }
+        nav a.inicio { color: white; background-color: #4e9f3d; }
+        nav a.azul1 { color: white; background-color: #005ea8; }
+        nav a.azul2 { color: white; background-color: #0074c7; }
+        nav a.azul3 { color: white; background-color: #2895e2; }
+        nav a.amar1 { color: white; background-color: #e2ad28; }
+        nav a.logout { color: white; background-color: #b93c3c; }
 
-        /* Azules elegantes para el resto */
-        nav a.azul1 {
-            color: white;
-            background-color: #005ea8;
-        }
+        nav a:hover { opacity: 0.85; }
 
-        nav a.azul2 {
-            color: white;
-            background-color: #0074c7;
-        }
-
-        nav a.azul3 {
-            color: white;
-            background-color: #2895e2;
-        }
-
-        /* Cerrar sesión */
-        nav a.logout {
-            color: white;
-            background-color: #b93c3c;
-        }
-
-        nav a:hover {
-            opacity: 0.85;
-        }
-
-        /* MAIN */
         main {
             max-width: 1000px;
-            margin-left: 1.5rem;   /* pegado a la izquierda */
+            margin-left: 1.5rem;
             margin-top: 1.5rem;
             padding: 1.5rem;
             background-color: white;
@@ -103,7 +73,6 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.05);
         }
 
-        /* FOOTER */
         footer {
             text-align: left;
             padding: 1rem 1.5rem;
@@ -118,15 +87,24 @@
 
     <header>
         <i class="fa-solid fa-calendar-days"></i>
-        <h1>Agenda Online</h1>
+
+        <div>
+            <h1>Agenda Online</h1>
+
+            {% if user.is_authenticated %}
+            <div style="font-size:0.85rem; margin-top:2px; opacity:0.9;">
+                Bienvenido {{ user.first_name|default:user.username }}
+            </div>
+            {% endif %}
+        </div>
     </header>
 
     <nav>
-
         <a class="inicio" href="{% url 'agenda:home' %}">
             <i class="fa-solid fa-house"></i> Inicio
         </a>
 
+        {% if user.is_authenticated %}
         <a class="azul1" href="{% url 'agenda:professional_list' %}">
             <i class="fa-solid fa-users-gear"></i> Profesionales
         </a>
@@ -147,17 +125,26 @@
             <i class="fa-solid fa-id-badge"></i> Perfil
         </a>
 
-        <a class="azul3" href="{% url 'registro' %}">
-            <i class="fa-solid fa-user-shield"></i> Registro
-        </a>
-
         <a class="azul3" href="{% url 'about' %}">
             <i class="fa-solid fa-circle-info"></i> Acerca de mí
         </a>
+        {% endif %}
 
+        {% if not user.is_authenticated or user.is_authenticated %}
+        <a class="amar1" href="{% url 'registro' %}">
+            <i class="fa-solid fa-user-shield"></i> Registro
+        </a>
+
+        <a class="amar1" href="{% url 'login' %}">
+            <i class="fa-solid fa-user-shield"></i> Inicio sesión
+        </a>
+        {% endif %}
+
+        {% if user.is_authenticated %}
         <a class="logout" href="{% url 'logout' %}">
             <i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión
         </a>
+        {% endif %}
     </nav>
 
     <main>

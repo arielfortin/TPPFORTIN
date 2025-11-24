@@ -5,16 +5,19 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.forms import *
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def index(request):
     return render(request, 'agenda/home.html')
+
 
 def home(request):
     return render(request, 'agenda/home.html')
 
 #def home(request):
 #    return HttpResponse("<h1>¡Funciona la raíz2!</h1>")
-
+@login_required
 def professional_list(request):
     form = ProfessionalSearchForm(request.GET or None)
     qs = Professional.objects.all()
@@ -27,7 +30,7 @@ def professional_list(request):
             qs = qs.filter(profession=profession)
     return render(request, 'agenda/professional_list.html', {'professionals': qs, 'form': form})
 
-
+@login_required
 def professional_create(request):
     if request.method == 'POST':
         form = ProfessionalForm(request.POST)
@@ -38,7 +41,7 @@ def professional_create(request):
         form = ProfessionalForm()
     return render(request, 'agenda/professional_form.html', {'form': form})
 
-
+@login_required
 def client_create(request):
     if request.method == 'POST':
         form = ClientForm(request.POST)
@@ -49,7 +52,7 @@ def client_create(request):
         form = ClientForm()
     return render(request, 'agenda/client_form.html', {'form': form})
 
-
+@login_required
 def appointment_create(request):
     if request.method == 'POST':
         form = AppointmentForm(request.POST)
@@ -60,6 +63,7 @@ def appointment_create(request):
         form = AppointmentForm()
     return render(request, 'agenda/appointment_form.html', {'form': form})
 
+@login_required
 def professional_edit(request, pk):
     professional = get_object_or_404(Professional, pk=pk)
 
@@ -74,6 +78,7 @@ def professional_edit(request, pk):
     return render(request, 'agenda/professional_edit.html', {'form': form})
 
 
+@login_required
 def professional_delete(request, pk):
     professional = get_object_or_404(Professional, pk=pk)
 

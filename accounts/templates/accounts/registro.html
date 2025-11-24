@@ -1,153 +1,114 @@
 {% extends "agenda/base.html" %}
 {% load static %}
 
-{% block title %}Registro de Usuario{% endblock %}
-
 {% block content %}
 
 <style>
-    .reg-container {
-        max-width: 700px;
-        margin: 30px auto;
-        background: white;
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.10);
-        font-family: "Poppins", sans-serif;
-    }
-
-    .reg-container h2 {
-        text-align: center;
+    .page-title {
+        text-align: left;
+        font-size: 26px;
         margin-bottom: 20px;
-        font-weight: 600;
-        color: #333;
+        font-weight: bold;
     }
 
-    h3 {
-        margin-top: 10px;
-        font-size: 18px;
-        color: #555;
-        border-bottom: 1px solid #eee;
-        padding-bottom: 5px;
-        margin-bottom: 10px;
+    .form-wrapper {
+        max-width: 550px;
+        background: #ffffff;
+        padding: 25px 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        margin: 0 auto;
     }
 
     .form-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 15px 25px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
     }
 
-    .form-grid p {
-        margin: 0;
-    }
-
-    label {
-        font-weight: 500;
-        color: #333;
-        font-size: 14px;
-        margin-bottom: 3px;
+    .form-group label {
+        font-weight: 600;
+        margin-bottom: 6px;
         display: block;
     }
 
-    input, textarea {
+    .form-group input {
         width: 100%;
-        padding: 8px;
+        padding: 10px;
         border-radius: 6px;
         border: 1px solid #ccc;
-        font-size: 14px;
-    }
-
-    textarea {
-        resize: none;
-        height: 70px;
     }
 
     .helper-text {
-        font-size: 11px;
-        color: #777;
+        font-size: 12px;
+        color: #666;
+    }
+
+    .error-text {
+        font-size: 13px;
+        color: #b30000;
         margin-top: 3px;
-        display: block;
     }
 
-    button {
-        width: 100%;
-        padding: 12px;
-        background: #4da6ff;
-        border: none;
-        color: white;
-        font-size: 1rem;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: 600;
-        margin-top: 15px;
-    }
-
-    button:hover {
-        background: #338fe0;
-    }
-
-    .error-msg {
+    .alert {
         padding: 10px;
-        background: #ffd2d2;
-        border-left: 4px solid #d40000;
-        color: #660000;
-        margin-bottom: 15px;
+        background: #ffe5e5;
+        color: #b30000;
         border-radius: 6px;
+        margin-bottom: 15px;
     }
 
-    @media (max-width: 650px) {
-        .form-grid {
-            grid-template-columns: 1fr;
-        }
+    .btn-submit {
+        width: 100%;
+        margin-top: 20px;
+        padding: 12px;
+        background: #00aaff;       /* Azul celeste como las otras páginas */
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 17px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.2s ease-in-out;
+    }
+
+    .btn-submit:hover {
+        background: #0088cc;
     }
 </style>
 
-<div class="reg-container">
-    <h2>Crear Cuenta</h2>
 
-    {% if error %}
-    <div class="error-msg">
-        {{ error }}
-    </div>
+<h2 class="page-title">Registro</h2>
+
+<form method="POST" enctype="multipart/form-data" class="form-wrapper">
+    {% csrf_token %}
+
+    <!-- Mensajes -->
+    {% if messages %}
+        {% for m in messages %}
+            <div class="alert">{{ m }}</div>
+        {% endfor %}
     {% endif %}
 
-    <form method="POST">
-        {% csrf_token %}
+    <div class="form-grid">
+        {% for field in form_user %}
+        <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
 
-        <!-- DATOS DE USUARIO -->
-        <h3>Datos de Usuario</h3>
+            {{ field }}
 
-        <div class="form-grid">
+            {% if field.help_text %}
+                <small class="helper-text">{{ field.help_text }}</small>
+            {% endif %}
 
-            {% for field in form_user %}
-            <p>
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {{ field }}
-
-                {% if field.name == "username" %}
-                <span class="helper-text">
-                    Máximo 20 caracteres. Solo letras, números y @/./+/-/_.
-                </span>
-                {% endif %}
-
-                {% if field.errors %}
-                <span style="color:#b30000; font-size:12px;">
-                    {{ field.errors|striptags }}
-                </span>
-                {% endif %}
-            </p>
-            {% endfor %}
+            {% if field.errors %}
+                <span class="error-text">{{ field.errors|striptags }}</span>
+            {% endif %}
         </div>
+        {% endfor %}
+    </div>
 
-        <!-- INFORMACIÓN PERSONAL -->
-        <h3>Información Personal</h3>
-        <div class="form-grid">
-            {{ form_profile.as_p }}
-        </div>
-
-        <button type="submit">Registrarme</button>
-    </form>
-</div>
+    <button type="submit" class="btn-submit">Registrarme</button>
+</form>
 
 {% endblock %}
